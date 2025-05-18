@@ -16,7 +16,8 @@ bool modoContraComputador = false;
 enum EstadoJogo
 {
     MENU,
-    JOGANDO
+    JOGANDO,
+    FIM
 } estadoAtual = MENU;
 
 void desenharTexto(float x, float y, void *fonte, const char *texto)
@@ -44,6 +45,7 @@ void desenharMenu()
 
 void desenharJogo()
 {
+    glLoadIdentity();
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -81,13 +83,38 @@ void desenharJogo()
     glutSwapBuffers();
 }
 
+void desenharFIM()
+{
+    glClearColor(0.0, 0.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 0.0);
+
+    char pontuacaoj1[50];
+    sprintf(pontuacaoj1, "Jogador 1: %d", pontosJogador1);
+    char pontuacaoj2[50];
+    sprintf(pontuacaoj2, "Jogador 2: %d", pontosJogador2);
+
+
+    desenharTexto(-0.2f, 0.6f, GLUT_BITMAP_TIMES_ROMAN_24, "PONTUAÇÃO FINAL:");
+    desenharTexto(-0.2f, 0.4f, GLUT_BITMAP_HELVETICA_18, pontuacaoj1);
+    desenharTexto(-0.2f, 0.2f, GLUT_BITMAP_HELVETICA_18, pontuacaoj2);
+    desenharTexto(-0.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE BACKSPACE PARA MENU");
+    desenharTexto(-0.2f, -0.2f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE ESC PARA SAIR");
+    
+    glutSwapBuffers();
+}
+
 void desenharTela()
 {
     if (estadoAtual == MENU)
         desenharMenu();
+    else if (estadoAtual == FIM)
+        desenharFIM();
     else
         desenharJogo();
 }
+
+
 
 float direcaoAleatoria()
 {
@@ -129,12 +156,20 @@ void atualizarJogo(int valor)
         {
             pontosJogador2++;
             resetarBola();
-        }
+           if (pontosJogador2 >= 3){
+            estadoAtual = FIM;
+            }
+        }        
         else if (bolaX > proporcaoTela)
         {
             pontosJogador1++;
             resetarBola();
+            if (pontosJogador1 >= 3){
+            estadoAtual = FIM;
+            }
         }
+
+      
 
         if (teclaW && raquete1Y < 0.8f)
             raquete1Y += 0.02f;
@@ -227,6 +262,8 @@ void redimensionarTela(int largura, int altura)
     gluOrtho2D(-proporcaoTela, proporcaoTela, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
 }
+
+
 
 int main(int argc, char **argv)
 {

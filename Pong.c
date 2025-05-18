@@ -12,6 +12,9 @@ int larguraJanela = 800, alturaJanela = 600;
 float proporcaoTela = 800.0 / 600.0;
 bool modoSelecionado = false;
 bool modoContraComputador = false;
+time_t tempoInicial;
+int tempoDecorrido = 0;
+const float velocidade_bola = 0.01f;
 
 enum EstadoJogo
 {
@@ -39,6 +42,9 @@ void desenharMenu()
     desenharTexto(-0.4f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE 1 PARA JOGAR CONTRA COMPUTADOR");
     desenharTexto(-0.4f, -0.2f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE 2 PARA JOGAR CONTRA USUARIO");
     desenharTexto(-0.4f, -0.4f, GLUT_BITMAP_HELVETICA_12, "PRESSIONE ESC PARA SAIR");
+
+    pontosJogador1 = 0;
+    pontosJogador2 = 0;
 
     glutSwapBuffers();
 }
@@ -76,6 +82,10 @@ void desenharJogo()
     glVertex2f(bolaX - tamanhoBola, bolaY - tamanhoBola);
     glEnd();
 
+    char cronometro[50];
+    sprintf(cronometro, "Tempo: %d s", tempoDecorrido);
+    desenharTexto(0.6f, 0.9f, GLUT_BITMAP_HELVETICA_18, cronometro);
+
     char pontuacao[50];
     sprintf(pontuacao, "Jogador 1: %d   Jogador 2: %d", pontosJogador1, pontosJogador2);
     desenharTexto(-0.25f, 0.9f, GLUT_BITMAP_HELVETICA_18, pontuacao);
@@ -101,6 +111,7 @@ void desenharFIM()
     desenharTexto(-0.2f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE BACKSPACE PARA MENU");
     desenharTexto(-0.2f, -0.2f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE ESC PARA SAIR");
     
+
     glutSwapBuffers();
 }
 
@@ -115,18 +126,17 @@ void desenharTela()
 }
 
 
-
 float direcaoAleatoria()
 {
-    return (rand() % 2 == 0 ? 1 : -1) * (0.005f + ((float)rand() / RAND_MAX) * 0.01f);
+    return (rand() % 2 == 0) ? 1.0f : -1.0f;
 }
 
 void resetarBola()
 {
     bolaX = 0;
     bolaY = 0;
-    direcaoBolaX = direcaoAleatoria();
-    direcaoBolaY = direcaoAleatoria();
+    direcaoBolaX = direcaoAleatoria() * velocidade_bola;
+    direcaoBolaY = direcaoAleatoria() * velocidade_bola;
 }
 
 void atualizarJogo(int valor)
@@ -191,6 +201,7 @@ void atualizarJogo(int valor)
                 raquete2Y -= 0.02f;
         }
 
+        tempoDecorrido = (int)(time(NULL) - tempoInicial);
         glutPostRedisplay();
         glutTimerFunc(16, atualizarJogo, 0);
     }
@@ -206,12 +217,16 @@ void pressionarTecla(unsigned char tecla, int x, int y)
         modoContraComputador = true; 
         estadoAtual = JOGANDO;
         resetarBola();
+        tempoInicial = time(NULL);
+        tempoDecorrido = 0;
         glutTimerFunc(0, atualizarJogo, 0);
         break;
     case '2':
         modoContraComputador = false; 
         estadoAtual = JOGANDO;
         resetarBola();
+        tempoInicial = time(NULL);
+        tempoDecorrido = 0;
         glutTimerFunc(0, atualizarJogo, 0);
         break;
     case 'w':

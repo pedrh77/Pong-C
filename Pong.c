@@ -35,10 +35,9 @@ void desenharMenu()
     glColor3f(1.0, 1.0, 0.0);
 
     desenharTexto(-0.2f, 0.6f, GLUT_BITMAP_TIMES_ROMAN_24, "PING PONG");
-    desenharTexto(-0.4f, 0.2f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE ENTER PARA COMECAR");
-    desenharTexto(-0.4f, 0.0f, GLUT_BITMAP_HELVETICA_18, "1 - Jogar contra o Computador");
-    desenharTexto(-0.4f, -0.2f, GLUT_BITMAP_HELVETICA_18, "2 - Jogar contra outro Jogador");
-    desenharTexto(-0.4f, -0.4f, GLUT_BITMAP_HELVETICA_12, "ESC - Sair do jogo");
+    desenharTexto(-0.4f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE 1 PARA JOGAR CONTRA COMPUTADOR");
+    desenharTexto(-0.4f, -0.2f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE 2 PARA JOGAR CONTRA USUARIO");
+    desenharTexto(-0.4f, -0.4f, GLUT_BITMAP_HELVETICA_12, "PRESSIONE ESC PARA SAIR");
 
     glutSwapBuffers();
 }
@@ -53,21 +52,22 @@ void desenharJogo()
 
     glColor3f(1.0, 1.0, 1.0);
 
-    glBegin(GL_QUADS);
+    glBegin(GL_QUADS); //RAQUETE 1
     glVertex2f(-posRaqueteX, raquete1Y + 0.2);
     glVertex2f(-posRaqueteX + 0.05, raquete1Y + 0.2);
     glVertex2f(-posRaqueteX + 0.05, raquete1Y - 0.2);
     glVertex2f(-posRaqueteX, raquete1Y - 0.2);
     glEnd();
 
-    glBegin(GL_QUADS);
+    
+    glBegin(GL_QUADS); //RAQUETE 2
     glVertex2f(posRaqueteX - 0.05, raquete2Y + 0.2);
     glVertex2f(posRaqueteX, raquete2Y + 0.2);
     glVertex2f(posRaqueteX, raquete2Y - 0.2);
     glVertex2f(posRaqueteX - 0.05, raquete2Y - 0.2);
     glEnd();
 
-    glBegin(GL_QUADS);
+    glBegin(GL_QUADS); //BOLINHA
     glVertex2f(bolaX - tamanhoBola, bolaY + tamanhoBola);
     glVertex2f(bolaX + tamanhoBola, bolaY + tamanhoBola);
     glVertex2f(bolaX + tamanhoBola, bolaY - tamanhoBola);
@@ -164,7 +164,7 @@ void pressionarTecla(unsigned char tecla, int x, int y)
 {
     switch (tecla)
     {
-    case 27:
+    case 27: //ESC
         exit(0);
         break;
     case '1':
@@ -187,7 +187,7 @@ void pressionarTecla(unsigned char tecla, int x, int y)
     case 'S':
         teclaS = 1;
         break;
-    case 8:
+    case 8: //BACKSPACE
         estadoAtual = MENU;
         break;
     }
@@ -200,15 +200,15 @@ void soltarTecla(unsigned char tecla, int x, int y)
         teclaS = 0;
 }
 
-void teclaEspecialPressionada(int tecla, int x, int y)
+void teclaEspecialPressionada(int tecla, int x, int y) //NAO TEM NO ASCII TEMOS QUE USAR GLUT
 {
-    if (tecla == GLUT_KEY_UP)
+    if (tecla == GLUT_KEY_UP) 
         setaCima = 1;
     if (tecla == GLUT_KEY_DOWN)
         setaBaixo = 1;
 }
 
-void teclaEspecialSolta(int tecla, int x, int y)
+void teclaEspecialSolta(int tecla, int x, int y) //NAO FUNCIONA NO ASCII TEMOS QUE USAR GLUT
 {
     if (tecla == GLUT_KEY_UP)
         setaCima = 0;

@@ -200,21 +200,29 @@ void atualizarJogo(int valor)
         if (bolaX < -proporcaoTela)
         {
             pontosJogador2++;
-            resetarBola();
-           if (pontosJogador2 >= 3){
-            estadoAtual = FIM;
+            printf("Ponto para Jogador 2! Placar: %d x %d\n", pontosJogador1, pontosJogador2);
+            if (pontosJogador2 >= limitePontos)
+            {
+                printf("Jogador 2 venceu!\n");
+                estadoAtual = FIM;
+                glutPostRedisplay();
+                return;
             }
-        }        
+            resetarBola();
+        }
         else if (bolaX > proporcaoTela)
         {
             pontosJogador1++;
-            resetarBola();
-            if (pontosJogador1 >= 3){
-            estadoAtual = FIM;
+            printf("Ponto para Jogador 1! Placar: %d x %d\n", pontosJogador1, pontosJogador2);
+            if (pontosJogador1 >= limitePontos)
+            {
+                printf("Jogador 1 venceu!\n");
+                estadoAtual = FIM;
+                glutPostRedisplay();
+                return;
             }
+            resetarBola();
         }
-
-      
 
         if (teclaW && raquete1Y < 0.8f)
             raquete1Y += 0.02f;

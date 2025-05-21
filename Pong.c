@@ -15,6 +15,16 @@ bool modoContraComputador = false;
 time_t tempoInicial;
 int tempoDecorrido = 0;
 const float velocidade_bola = 0.01f;
+bool jogoPausado = false;
+int limitePontos = 3; // pode mudar para outro valor q os jogafores desejarem
+
+enum Dificuldade {
+    FACIL = 0,
+    MEDIO = 1,
+    DIFICIL = 2
+};
+
+enum Dificuldade dificuldadeAtual = MEDIO;
 
 enum EstadoJogo
 {

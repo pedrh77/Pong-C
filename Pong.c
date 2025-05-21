@@ -100,6 +100,12 @@ void desenharJogo()
     sprintf(pontuacao, "Jogador 1: %d   Jogador 2: %d", pontosJogador1, pontosJogador2);
     desenharTexto(-0.25f, 0.9f, GLUT_BITMAP_HELVETICA_18, pontuacao);
 
+    if (jogoPausado)
+    {
+    glColor3f(1.0, 0.0, 0.0);
+    desenharTexto(-0.1f, 0.0f, GLUT_BITMAP_HELVETICA_18, "PAUSADO - Pressione 'P' para continuar");
+    }
+
     glutSwapBuffers();
 }
 

@@ -151,13 +151,32 @@ void resetarBola()
 {
     bolaX = 0;
     bolaY = 0;
-    direcaoBolaX = direcaoAleatoria() * velocidade_bola;
-    direcaoBolaY = direcaoAleatoria() * velocidade_bola;
+
+    float velocidade;
+
+    switch (dificuldadeAtual)
+    {
+        case FACIL:
+            velocidade = 0.007f;
+            break;
+        case MEDIO:
+            velocidade = 0.01f;
+            break;
+        case DIFICIL:
+            velocidade = 0.015f;
+            break;
+        default:
+            velocidade = 0.01f;
+    }
+
+    direcaoBolaX = direcaoAleatoria() * velocidade;
+    direcaoBolaY = direcaoAleatoria() * velocidade;
 }
+
 
 void atualizarJogo(int valor)
 {
-    if (estadoAtual == JOGANDO)
+    if (estadoAtual == JOGANDO && !jogoPausado)
     {
         bolaX += direcaoBolaX;
         bolaY += direcaoBolaY;

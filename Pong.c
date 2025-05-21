@@ -306,11 +306,13 @@ void pressionarTecla(unsigned char tecla, int x, int y)
     case 'S':
         teclaS = 1;
         break;
-    case 8: //BACKSPACE
+    case 8: // BACKSPACE
         estadoAtual = MENU;
+        jogoPausado = false;
         break;
     }
 }
+
 void soltarTecla(unsigned char tecla, int x, int y)
 {
     if (tecla == 'w' || tecla == 'W')

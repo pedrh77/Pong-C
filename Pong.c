@@ -245,32 +245,58 @@ void atualizarJogo(int valor)
         }
 
         tempoDecorrido = (int)(time(NULL) - tempoInicial);
-        glutPostRedisplay();
-        glutTimerFunc(16, atualizarJogo, 0);
     }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, atualizarJogo, 0);
 }
+
 void pressionarTecla(unsigned char tecla, int x, int y)
 {
     switch (tecla)
     {
-    case 27: //ESC
+    case 27: // ESC
         exit(0);
         break;
-    case '1':
-        modoContraComputador = true; 
+    case '1': // Jogar contra computador - fácil
+        modoContraComputador = true;
+        dificuldadeAtual = FACIL;
         estadoAtual = JOGANDO;
+        jogoPausado = false;
         resetarBola();
         tempoInicial = time(NULL);
         tempoDecorrido = 0;
         glutTimerFunc(0, atualizarJogo, 0);
         break;
-    case '2':
-        modoContraComputador = false; 
+    case '2': // Jogar contra usuário - médio
+        modoContraComputador = false;
+        dificuldadeAtual = MEDIO;
         estadoAtual = JOGANDO;
+        jogoPausado = false;
         resetarBola();
         tempoInicial = time(NULL);
         tempoDecorrido = 0;
         glutTimerFunc(0, atualizarJogo, 0);
+        break;
+    case '3': // Jogar contra computador - difícil
+        modoContraComputador = true;
+        dificuldadeAtual = DIFICIL;
+        estadoAtual = JOGANDO;
+        jogoPausado = false;
+        resetarBola();
+        tempoInicial = time(NULL);
+        tempoDecorrido = 0;
+        glutTimerFunc(0, atualizarJogo, 0);
+        break;
+    case 'p':
+    case 'P':
+        if (estadoAtual == JOGANDO)
+            jogoPausado = !jogoPausado;
+        break;
+    case 'r':
+    case 'R':
+        estadoAtual = MENU;
+        jogoPausado = false;
         break;
     case 'w':
     case 'W':

@@ -8,8 +8,8 @@ float bolaX = 0, bolaY = 0, direcaoBolaX = 0.01, direcaoBolaY = 0.01;
 float raquete1Y = 0, raquete2Y = 0;
 int teclaW = 0, teclaS = 0, setaCima = 0, setaBaixo = 0;
 int pontosJogador1 = 0, pontosJogador2 = 0;
-int larguraJanela = 800, alturaJanela = 720;
-float proporcaoTela = 800.0 / 720.0;
+int larguraJanela = 800, alturaJanela = 600;
+float proporcaoTela = 800.0 / 600.0;
 time_t tempoInicial;
 int tempoDecorrido = 0;
 bool jogoPausado = false;
@@ -302,7 +302,6 @@ void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 
             {
             case '1':
                 modoJogoAtual = COMPUTADOR;
-                estadoAtual = JOGANDO; 
                 jogoPausado = false;
                 resetarBola();
                 tempoInicial = time(NULL);
@@ -311,7 +310,6 @@ void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 
                 break;
             case '2':
                 modoJogoAtual = CONTRA;
-                estadoAtual = JOGANDO; 
                 jogoPausado = false;
                 resetarBola();
                 tempoInicial = time(NULL);
@@ -369,6 +367,7 @@ void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 
                 tempoInicial = time(NULL);
                 tempoDecorrido = 0;
                 glutTimerFunc(0, atualizarJogo, 0);
+                
             }
             else if (tecla == 8) // BACKSPACE
             {

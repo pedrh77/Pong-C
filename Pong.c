@@ -292,7 +292,7 @@ void atualizarJogo(int valor)
     glutTimerFunc(16, atualizarJogo, 0);
 }
 
-void pressionarTecla(unsigned char tecla, int x, int y)
+void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 a tecla.
 {
     if (estadoAtual == MENU)
     {
@@ -302,6 +302,12 @@ void pressionarTecla(unsigned char tecla, int x, int y)
             {
             case '1':
                 modoJogoAtual = COMPUTADOR;
+                estadoAtual = JOGANDO; 
+                jogoPausado = false;
+                resetarBola();
+                tempoInicial = time(NULL);
+                tempoDecorrido = 0;
+                glutTimerFunc(0, atualizarJogo, 0);
                 break;
             case '2':
                 modoJogoAtual = CONTRA;
@@ -312,12 +318,12 @@ void pressionarTecla(unsigned char tecla, int x, int y)
                 tempoDecorrido = 0;
                 glutTimerFunc(0, atualizarJogo, 0);
                 break;
-            case 27: // ESC
+            case 27: // esc
                 exit(0);
                 break;
             }
         }
-        else if (dificuldadeAtual == SELECAODIF) // Escolher dificuldade
+        else if (dificuldadeAtual == SELECAODIF) // escolher dificuldade
         {
             switch (tecla)
             {
@@ -455,7 +461,7 @@ void redimensionarTela(int largura, int altura)
 
 int main(int argc, char **argv)
 {
-    srand(time(NULL));
+    srand(time(NULL)); //ex: a bola começar em lugares aleatorios
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -464,8 +470,8 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(desenharTela);
     glutKeyboardFunc(pressionarTecla);
-    glutKeyboardUpFunc(soltarTecla);
-    glutSpecialFunc(teclaEspecialPressionada);
+    glutKeyboardUpFunc(soltarTecla); //como fizemos raquete, precisava dos 2
+    glutSpecialFunc(teclaEspecialPressionada); //seta-F1-F2-ENTER-BACKSPACE
     glutSpecialUpFunc(teclaEspecialSolta);
     glutReshapeFunc(redimensionarTela);
     glutMouseFunc(mouse);

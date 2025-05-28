@@ -8,6 +8,8 @@ float bolaX = 0, bolaY = 0, direcaoBolaX = 0.01, direcaoBolaY = 0.01;
 float raquete1Y = 0, raquete2Y = 0;
 int teclaW = 0, teclaS = 0, setaCima = 0, setaBaixo = 0;
 int pontosJogador1 = 0, pontosJogador2 = 0;
+float velocidadeBase = 0.01f;
+float velocidadeBolaX, velocidadeBolaY;
 int larguraJanela = 800, alturaJanela = 600;
 float proporcaoTela = 800.0 / 600.0;
 time_t tempoInicial;
@@ -50,9 +52,9 @@ void desenharTexto(float x, float y, void *fonte, const char *texto)
 }
 void desenharMenu()
 {
-    glClearColor(0.0, 0.0, 1.0, 1.0); 
+    glClearColor(0.0, 0.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0, 1.0, 0.0); 
+    glColor3f(1.0, 1.0, 0.0);
 
     desenharTexto(-0.15f, 0.7f, GLUT_BITMAP_TIMES_ROMAN_24, "PING PONG");
 
@@ -64,7 +66,7 @@ void desenharMenu()
     }
     else if (modoJogoAtual == COMPUTADOR && dificuldadeAtual == SELECAODIF)
     {
-       
+
         desenharTexto(-0.35f, 0.3f, GLUT_BITMAP_HELVETICA_18, "SELECIONE A DIFICULDADE:");
         desenharTexto(-0.3f, 0.1f, GLUT_BITMAP_HELVETICA_18, "F - FACIL");
         desenharTexto(-0.3f, -0.1f, GLUT_BITMAP_HELVETICA_18, "M - MEDIO");
@@ -72,7 +74,7 @@ void desenharMenu()
     }
     else
     {
-       
+
         desenharTexto(-0.3f, 0.3f, GLUT_BITMAP_HELVETICA_18, "PRESSIONE 'ESPACO' PARA INICIAR O JOGO");
     }
 
@@ -173,7 +175,7 @@ void desenharTela()
 
 float direcaoAleatoria()
 {
-    return (rand() % 2 == 0) ? 1.0f : -1.0f;
+    return (rand() % 2 == 0) ? 0.5f : -0.5f;
 }
 
 void mudarCorFundo()
@@ -183,42 +185,38 @@ void mudarCorFundo()
     fundoB = (float)rand() / RAND_MAX;
 }
 
-
 void mouse(int botao, int estado, int x, int y)
 {
     if (botao == GLUT_LEFT_BUTTON && estado == GLUT_DOWN)
     {
         mudarCorFundo();
-        glutPostRedisplay(); 
+        glutPostRedisplay();
     }
 }
-
 void resetarBola()
 {
     bolaX = 0;
     bolaY = 0;
 
-    float velocidade;
-
     switch (dificuldadeAtual)
     {
     case FACIL:
-        velocidade = 0.007f;
+        velocidadeBase = 0.007f;
         break;
     case MEDIO:
-        velocidade = 0.01f;
+        velocidadeBase = 0.01f;
         break;
     case DIFICIL:
-        velocidade = 0.015f;
+        velocidadeBase = 0.015f;
         break;
     default:
-        velocidade = 0.01f;
+        velocidadeBase = 0.01f;
     }
 
-    direcaoBolaX = direcaoAleatoria() * velocidade;
-    direcaoBolaY = direcaoAleatoria() * velocidade;
-}
+      direcaoBolaX = direcaoAleatoria() * velocidadeBase;
+    direcaoBolaY = direcaoAleatoria() * velocidadeBase;
 
+}
 void atualizarJogo(int valor)
 {
     if (estadoAtual == JOGANDO && !jogoPausado)
@@ -226,16 +224,17 @@ void atualizarJogo(int valor)
         bolaX += direcaoBolaX;
         bolaY += direcaoBolaY;
 
+        float posRaqueteX = 0.85f * proporcaoTela;
+
         if (bolaY > 1.0 || bolaY < -1.0)
             direcaoBolaY = -direcaoBolaY;
-
-        float posRaqueteX = 0.85f * proporcaoTela;
 
         if (bolaX < -posRaqueteX + 0.05 && bolaX > -posRaqueteX &&
             bolaY < raquete1Y + 0.2 && bolaY > raquete1Y - 0.2)
         {
             direcaoBolaX = -direcaoBolaX;
         }
+
         if (bolaX > posRaqueteX - 0.05 && bolaX < posRaqueteX &&
             bolaY < raquete2Y + 0.2 && bolaY > raquete2Y - 0.2)
         {
@@ -248,21 +247,24 @@ void atualizarJogo(int valor)
             if (pontosJogador2 >= limitePontos)
             {
                 estadoAtual = FIM;
-                glutPostRedisplay();
-                return;
             }
-            resetarBola();
+            else
+            {
+                resetarBola();
+            }
         }
-        else if (bolaX > proporcaoTela)
+
+        if (bolaX > proporcaoTela)
         {
             pontosJogador1++;
             if (pontosJogador1 >= limitePontos)
             {
                 estadoAtual = FIM;
-                glutPostRedisplay();
-                return;
             }
-            resetarBola();
+            else
+            {
+                resetarBola();
+            }
         }
 
         if (teclaW && raquete1Y < 0.8f)
@@ -289,14 +291,14 @@ void atualizarJogo(int valor)
     }
 
     glutPostRedisplay();
-    glutTimerFunc(16, atualizarJogo, 0);
+    glutTimerFunc(16, atualizarJogo, 0);  
 }
 
-void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 a tecla.
+void pressionarTecla(unsigned char tecla, int x, int y) // unsigned começa de 0 a tecla.
 {
     if (estadoAtual == MENU)
     {
-        if (modoJogoAtual == SELECAOMOD) 
+        if (modoJogoAtual == SELECAOMOD)
         {
             switch (tecla)
             {
@@ -355,6 +357,14 @@ void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 
                 tempoDecorrido = 0;
                 glutTimerFunc(0, atualizarJogo, 0);
                 break;
+            case 32:
+                estadoAtual = JOGANDO;
+                jogoPausado = false;
+                resetarBola();
+                tempoInicial = time(NULL);
+                tempoDecorrido = 0;
+                glutTimerFunc(0, atualizarJogo, 0);
+                break;
             }
         }
         else
@@ -367,7 +377,6 @@ void pressionarTecla(unsigned char tecla, int x, int y) //unsigned começa de 0 
                 tempoInicial = time(NULL);
                 tempoDecorrido = 0;
                 glutTimerFunc(0, atualizarJogo, 0);
-                
             }
             else if (tecla == 8) // BACKSPACE
             {
@@ -456,11 +465,16 @@ void redimensionarTela(int largura, int altura)
     glLoadIdentity();
     gluOrtho2D(-proporcaoTela, proporcaoTela, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
+
+    if (estadoAtual == JOGANDO)
+    {
+        resetarBola();
+    }
 }
 
 int main(int argc, char **argv)
 {
-    srand(time(NULL)); //ex: a bola começar em lugares aleatorios
+    srand(time(NULL)); // ex: a bola começar em lugares aleatorios
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -469,8 +483,8 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(desenharTela);
     glutKeyboardFunc(pressionarTecla);
-    glutKeyboardUpFunc(soltarTecla); //como fizemos raquete, precisava dos 2
-    glutSpecialFunc(teclaEspecialPressionada); //seta-F1-F2-ENTER-BACKSPACE
+    glutKeyboardUpFunc(soltarTecla);           // como fizemos raquete, precisava dos 2
+    glutSpecialFunc(teclaEspecialPressionada); // seta-F1-F2-ENTER-BACKSPACE
     glutSpecialUpFunc(teclaEspecialSolta);
     glutReshapeFunc(redimensionarTela);
     glutMouseFunc(mouse);
